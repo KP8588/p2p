@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>P2P Cloud Storage Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .card {
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.05);
+    }
+    button {
+      padding: 6px 12px;
+      cursor: pointer;
+      border-radius: 4px;
+      border: 1px solid #007bff;
+      background: #007bff;
+      color: white;
+    }
+    button:disabled {
+      background: #ccc;
+      border-color: #ccc;
+      cursor: not-allowed;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      font-size: 14px;
+      text-align: left;
+    }
+    th {
+      background: #f5f5f5;
+    }
+  </style>
+</head>
+<body>
+  <h1>P2P Cloud Storage (MCA Project)</h1>
+
+  <div class="card">
+    <h2>Upload File</h2>
+    <form id="uploadForm">
+      <input type="file" id="fileInput" name="file" required />
+      <button type="submit" id="uploadBtn">Upload</button>
+    </form>
+    <p id="uploadStatus"></p>
+  </div>
+
+  <div class="card">
+    <h2>Stored Files</h2>
+    <button id="refreshBtn">Refresh List</button>
+    <div id="filesContainer"></div>
+  </div>
+
+  <script>
+    const uploadForm = document.getElementById("uploadForm");
+    const fileInput = document.getElementById("fileInput");
+    const uploadBtn = document.getElementById("uploadBtn");
+    const uploadStatus = document.getElementById("uploadStatus");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const filesContainer = document.getElementById("filesContainer");
+
+    async function fetchFiles() {
+      filesContainer.innerHTML = "Loading...";
+      try {
+        const res = await fetch("/api/files");
+        const data = await res.json();
+        if (!Array.isArray(data) || data.length === 0) {
+          filesContainer.innerHTML = "<p>No files uploaded yet.</p>";
+          return;
+        }
+
+        let html = "<table><thead><tr>";
+        html += "<th>ID</th><th>Filename</th><th>Size (bytes)</th><th>Chunks</th><th>Created</th><th>Action</th>";
+        html += "</tr></thead><tbody>";
+
+        data.forEach((file) => {
+          html += "<tr>";
+          html += `<td>${file.id}</td>`;
+          html += `<td>${file.filename}</td>`;
+          html += `<td>${file.original_size}</td>`;
+          html += `<td>${file.chunks_count}</td>`;
+          html += `<td>${file.created_at}</td>`;
+          html += `<td><a href="/api/files/${file.id}/download">Download</a></td>`;
+          html += "</tr>";
+        });
+
+        html += "</tbody></table>";
+        filesContainer.innerHTML = html;
+      } catch (err) {
+        console.error(err);
+        filesContainer.innerHTML = "<p>Error loading files list.</p>";
+      }
+    }
+
+    uploadForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!fileInput.files[0]) return;
+
+      const formData = new FormData();
+      formData.append("file", fileInput.files[0]);
+
+      uploadBtn.disabled = true;
+      uploadStatus.textContent = "Uploading...";
+
+      try {
+        const res = await fetch("/api/files/upload", {
+          method: "POST",
+          body: formData,
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          uploadStatus.textContent =
+            "Uploaded successfully! File ID: " + data.fileId;
+          fileInput.value = "";
+          fetchFiles();
+        } else {
+          uploadStatus.textContent = "Error: " + (data.error || "Unknown");
+        }
+      } catch (err) {
+        console.error(err);
+        uploadStatus.textContent = "Error uploading file.";
+      } finally {
+        uploadBtn.disabled = false;
+      }
+    });
+
+    refreshBtn.addEventListener("click", fetchFiles);
+
+    // Load files on page load
+    fetchFiles();
+  </script>
+</body>
+</html>

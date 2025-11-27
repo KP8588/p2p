@@ -1,0 +1,246 @@
+/* ---------- THEMES (LIGHT & DARK) ---------- */
+[data-theme="light"] {
+  --bg: #f7f9fc;
+  --sidebar-bg: #ffffff;
+  --card-bg: #ffffff;
+
+  --text: #1f2937;
+  --text-soft: #4b5563;
+
+  --primary: #4f46e5;
+  --primary-soft: #eef2ff;
+
+  --success: #16a34a;
+  --danger: #ef4444;
+
+  --border: #e5e7eb;
+}
+
+[data-theme="dark"] {
+  --bg: #020617;
+  --sidebar-bg: #020617;
+  --card-bg: #0b1120;
+
+  --text: #e5e7eb;
+  --text-soft: #9ca3af;
+
+  --primary: #818cf8;
+  --primary-soft: rgba(129, 140, 248, 0.15);
+
+  --success: #22c55e;
+  --danger: #fb7185;
+
+  --border: #1f2937;
+}
+
+/* ---------- GLOBAL ---------- */
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #6b7280;
+  border-radius: 6px;
+}
+
+/* ---------- LAYOUT ---------- */
+.app-root {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 260px;
+  background: var(--sidebar-bg);
+  padding: 22px 18px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sidebar-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.sidebar-sub {
+  font-size: 12px;
+  color: var(--text-soft);
+}
+
+.sidebar-stat {
+  padding: 12px;
+  background: var(--card-bg);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ---------- MAIN ---------- */
+.main {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.topbar {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.topbar-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.topbar-subtitle {
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+/* ---------- CARDS ---------- */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 18px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.card-subtitle {
+  font-size: 13px;
+  color: var(--text-soft);
+  margin-bottom: 8px;
+}
+
+/* ---------- GRID ---------- */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 18px;
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+/* ---------- TABLE ---------- */
+.table-wrapper {
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  font-size: 12px;
+  text-align: left;
+  background: rgba(148, 163, 184, 0.16);
+  padding: 8px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+}
+
+.table td {
+  padding: 8px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.row-pill {
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.2);
+  font-size: 11px;
+}
+
+/* ---------- PEERS ---------- */
+.peer-item {
+  padding: 10px;
+  background: var(--card-bg);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+.status-online {
+  background: var(--success);
+}
+
+.status-offline {
+  background: var(--danger);
+}
+
+/* ---------- BUTTONS & UPLOAD ---------- */
+.primary-btn {
+  margin-top: 10px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: none;
+  background: var(--primary);
+  color: white;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.upload-secondary-btn {
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  cursor: pointer;
+}
+
+.upload-card {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px dashed var(--border);
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 960px) {
+  .sidebar {
+    display: none;
+  }
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
